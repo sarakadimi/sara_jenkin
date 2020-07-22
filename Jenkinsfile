@@ -8,7 +8,9 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'mvn -B jacoco:report checkstyle:checkstyle install'
+        echo 'mvn clean install'
+        echo 'mvn -B jacoco:report checkstyle:checkstyle install'
+        sh './mvnw package'
         archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
       }
     }
