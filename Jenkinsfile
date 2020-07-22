@@ -17,7 +17,7 @@ pipeline {
     stage('Publish Test Coverage Report and Code Analysis') {
       steps {
         jacoco()
-        recordIssues(tools: [checkStyle(), junitParser(), mavenConsole()])
+        echo 'recordIssues(tools: [checkStyle(), junitParser(), mavenConsole()])'
       }
     }
     stage('Déploiement') {
