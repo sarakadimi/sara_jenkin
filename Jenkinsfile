@@ -28,7 +28,7 @@ pipeline {
         sh 'sudo service monAppli start'
         sh 'sleep 30'
         echo '************************  fin de déployment avec succècs  ***************************'
-        echo 'Le site est disponible à l'adresse : http://192.168.33.10:8081/'
+        echo 'Le site est disponible à l\'adresse : http://192.168.33.10:8081/'
         }
     }
   }
