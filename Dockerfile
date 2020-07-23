@@ -1,5 +1,15 @@
 # Start with a base image containing Java runtime
-FROM openjdk:8-jdk-alpine
+FROM maven:3.5.2-jdk-8-alpine AS MAVEN_BUILD
+
+COPY pom.xml /build/
+COPY src /build/src/
+
+WORKDIR /build/
+
+RUN mvn package
+
+FROM openjdk:8-jre-alpine
+
 
 # Add Maintainer Info
 LABEL maintainer="sara37@outlook.fr"
@@ -11,7 +21,7 @@ VOLUME /tmp
 EXPOSE 8082
 
 # The application's jar file
-ARG JAR_FILE=target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar
+ARG JAR_FILE=/build/target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar
 
 # Add the application's jar to the container
 ADD ${JAR_FILE} spring-petclinic-prod.jar
