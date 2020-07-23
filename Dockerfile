@@ -10,10 +10,6 @@ RUN mvn package
 
 FROM openjdk:8-jre-alpine
 
-
-# Add Maintainer Info
-LABEL maintainer="sara37@outlook.fr"
-
 # Add a volume pointing to /tmp
 VOLUME /tmp
 
