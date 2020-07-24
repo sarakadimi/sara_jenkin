@@ -1,12 +1,28 @@
-mysql:
-  image: mysql:5.7
-  ports:
-    - "3306:3306"
-  environment:
-    - MYSQL_ROOT_PASSWORD=
-    - MYSQL_ALLOW_EMPTY_PASSWORD=true
-    - MYSQL_USER=petclinic
-    - MYSQL_PASSWORD=petclinic
-    - MYSQL_DATABASE=petclinic
-  volumes:
-    - "./conf.d:/etc/mysql/conf.d:ro"
+version: "3.7"
+
+services:
+  mysql-service:
+    image: mysql:5.7
+    networks:
+      - spring-boot-mysql-network
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_USER=petclinic
+      - MYSQL_PASSWORD=petclinic
+      - MYSQL_DATABASE=petclinic
+    - volumes:
+        - "./conf.d:/etc/mysql/conf.d:ro"
+  web-petclinic:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8081"
+    networks:
+      - spring-boot-mysql-network
+    depends_on:
+      - mysql-servicenetworks:
+  spring-boot-mysql-network:
+    driver: brid
