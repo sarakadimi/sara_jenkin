@@ -1,24 +1,16 @@
+FROM openjdk:11.0.5-jdk-slim as BUILDER
+WORKDIR /petclinic
+COPY .mvn /petclinic/.mvn
+COPY pom.xml /petclinic/pom.xml
+COPY mvnw /petclinic/mvnw
+RUN chmod +x mvnw
+RUN ./mvnw dependency:go-offline
+COPY src /petclinic/src
+RUN ./mvnw package -DskipTests
 # Start with a base image containing Java runtime
-FROM maven:3.5.2-jdk-8-alpine AS MAVEN_BUILD
-
-COPY pom.xml /build/
-COPY src /build/src/
-
-WORKDIR /build/
-
-RUN mvn package
-
-FROM openjdk:8-jre-alpine
-
-# Add a volume pointing to /tmp
-VOLUME /tmp
-
+FROM openjdk:11-jre-slim
+COPY --from=BUILDER /petclinic/target/*.jar /spring-petclinic.jar
 # Make port 8080 available to the world outside this container
 EXPOSE 8082
-
-
-WORKDIR /app
-COPY --from=MAVEN_BUILD /build/target/spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar /app/
-
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","spring-petclinic-2.3.1.BUILD-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","/spring-petclinic.jar"]
